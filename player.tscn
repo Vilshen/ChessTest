@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cl1nm3es7ugol"]
+
+[ext_resource type="Script" path="res://Player.cs" id="1_vk0cn"]
+
+[node name="Player" type="Node"]
+script = ExtResource("1_vk0cn")
+
+[node name="Clock" type="Timer" parent="."]
+wait_time = 600.0
+one_shot = true

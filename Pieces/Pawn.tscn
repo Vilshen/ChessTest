@@ -1,9 +1,9 @@
 [gd_scene load_steps=2 format=3 uid="uid://dumhf1cxkkr6v"]
 
-[ext_resource type="Script" path="res://Piece.cs" id="1_mhpkl"]
+[ext_resource type="Script" path="res://Pieces/Pawn.cs" id="1_gfsau"]
 
-[node name="Piece" type="Node2D"]
-script = ExtResource("1_mhpkl")
+[node name="Pawn" type="Node2D"]
+script = ExtResource("1_gfsau")
 
 [node name="Background" type="Sprite2D" parent="."]
 
