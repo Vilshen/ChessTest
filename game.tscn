@@ -11,5 +11,7 @@ script = ExtResource("1_wvm1j")
 position = Vector2(540, 540)
 
 [node name="Player_White" parent="." instance=ExtResource("3_xm2nj")]
+position = Vector2(1100, 984)
 
 [node name="Player_Black" parent="." instance=ExtResource("3_xm2nj")]
+position = Vector2(1100, 96)

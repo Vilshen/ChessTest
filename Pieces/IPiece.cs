@@ -11,7 +11,10 @@ using System.Threading.Tasks;
     {
         throw new NotImplementedException();
     }
-    void Click();
+    void Click(Player curr_player);
     void Set_Background();
+
+    void Select();
+    void Deselect();
 }
 

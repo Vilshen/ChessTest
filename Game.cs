@@ -15,6 +15,7 @@ public partial class Game : Node
     IPiece selected;
 
     Player[] players;
+    Team_Enum curr_player;
 
     int clock_length;
     int per_move_clock_bonus;
@@ -34,8 +35,10 @@ public partial class Game : Node
         cell_offset = (board_end - board_start) / 16;
 
         players = new Player[] { (Player)GetNode("Player_White"), (Player)GetNode("Player_Black") };
-        players[0].Setup(0, clock_length);
-        players[1].Setup(1, clock_length);
+        players[(int)Team_Enum.White].Setup(Team_Enum.White, clock_length);
+        players[(int)Team_Enum.Black].Setup(Team_Enum.Black, clock_length);
+
+        curr_player = Team_Enum.White;
 
         Setup_Game();
 
@@ -59,7 +62,7 @@ public partial class Game : Node
                 Vector2I cell = (Vector2I)Pixel_to_Grid(mouseEvent.Position);
                 if (board[cell.X,cell.Y] is Node2D)
                 {
-                    board[cell.X, cell.Y].Click();
+                    board[cell.X, cell.Y].Click(players[(int)curr_player]);
                 } 
                
             }
@@ -75,17 +78,16 @@ public partial class Game : Node
             board = new IPiece[8,8];
             for (int i = 0; i < 8; i++)
             {
-                board[i, 1] = Pawn.Load(players[0]);
-                AddChild((Pawn)board[i, 1]);
-                (board[i, 1] as Pawn).Position = Grid_to_Pixel(new Vector2(i, 1));
-                board[i, 6] = Pawn.Load(players[1]);
+                board[i, 6] = Pawn.Load(players[0]);
                 AddChild((Pawn)board[i, 6]);
                 (board[i, 6] as Pawn).Position = Grid_to_Pixel(new Vector2(i, 6));
+                board[i, 1] = Pawn.Load(players[1]);
+                AddChild((Pawn)board[i, 1]);
+                (board[i, 1] as Pawn).Position = Grid_to_Pixel(new Vector2(i, 1));
             }
         }
         
         Setup_Board();
-        GD.Print(board.Length);
     }
 
     public Vector2 Pixel_to_Grid(Vector2 position)

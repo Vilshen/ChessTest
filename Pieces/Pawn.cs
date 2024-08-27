@@ -3,8 +3,8 @@ using System;
 
 public partial class Pawn : Node2D, IPiece
 {
-    public Sprite2D background_node;
-    public Sprite2D Piece_sprite;
+    Sprite2D background_node;
+    Sprite2D Piece_sprite;
     public Player owner_player;
     public bool selected;
     public bool attacked;
@@ -23,15 +23,20 @@ public partial class Pawn : Node2D, IPiece
     {
         base._Ready();
         Link_Child_Nodes();
-        if (owner_player.id==0)
+        switch (owner_player.id)
         {
-            Piece_sprite.Texture = GD.Load<Texture2D>("res://assets/Pawn_White.png");
-        }
-        else
-        {
-            Piece_sprite.Texture = GD.Load<Texture2D>("res://assets/Pawn_Black.png");
+            case Team_Enum.White:
+                Piece_sprite.Texture = GD.Load<Texture2D>("res://assets/Pawn_White.png");
+                break;
+            case Team_Enum.Black:
+                Piece_sprite.Texture = GD.Load<Texture2D>("res://assets/Pawn_Black.png");
+                break;
+            default:
+                throw new IndexOutOfRangeException($"Piece with team ID higher than {(int)Team_Enum.Black} created");
+
         }
     }
+        
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
@@ -46,9 +51,25 @@ public partial class Pawn : Node2D, IPiece
         Piece_sprite = (Sprite2D)GetNode("PieceSprite");
     }
 
-    public void Click()
-    {   //must be called with player context. distinguish between own and enemy pieces.
-        selected = !selected;
+    public void Click(Player curr_player)
+    {   
+        if (curr_player == owner_player)
+        {
+            if (owner_player.selected_piece == this)
+            {
+                this.Deselect();
+            }
+            else
+            {
+                if (owner_player.selected_piece is not null)
+                {
+                    owner_player.selected_piece.Deselect();
+                }
+                this.Select();
+            }
+        }
+
+
         Set_Background();
     }
 
@@ -68,5 +89,18 @@ public partial class Pawn : Node2D, IPiece
         {
             background_node.Hide();
         }
+    }
+
+    public void Select()
+    {
+        selected = true;
+        owner_player.selected_piece = this;
+        Set_Background();
+    }
+    public void Deselect()
+    {
+        selected = false;
+        owner_player.selected_piece = null;
+        Set_Background();
     }
 }

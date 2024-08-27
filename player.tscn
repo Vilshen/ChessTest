@@ -2,8 +2,12 @@
 
 [ext_resource type="Script" path="res://Player.cs" id="1_vk0cn"]
 
-[node name="Player" type="Node"]
+[node name="Player" type="Node2D"]
 script = ExtResource("1_vk0cn")
+
+[node name="Clock_Label" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
 
 [node name="Clock" type="Timer" parent="."]
 wait_time = 600.0
