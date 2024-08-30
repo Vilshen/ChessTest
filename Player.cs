@@ -13,8 +13,8 @@ public partial class Player : Node2D
 
     Timer clock;
     Label clock_label;
-    
 
+    public IPiece checkmate_target;
     public void Setup(Team_Enum player_id,int clock_length)
     {
         id = player_id;

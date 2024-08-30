@@ -2,6 +2,6 @@
 
 public enum Team_Enum
 {
-    White,
-    Black
+    White = 0,
+    Black = 1
 }

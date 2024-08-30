@@ -1,20 +1,34 @@
+using Chess.Pieces;
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
-public partial class Pawn : Node2D, IPiece
+public partial class Pawn : Node2D, IPiece_Directional
 {
-    Sprite2D background_node;
-    Sprite2D Piece_sprite;
-    public Player owner_player;
-    public bool selected;
-    public bool attacked;
+    public Sprite2D background_node { get; set; }
+    public Sprite2D piece_sprite { get; set; }
+    public Player owner_player { get; private set; }
 
-    public static Pawn Load(Player owner)
+    public Vector2I board_position { get; set; }
+    public bool selected { get; set; }
+    public bool attacked { get; set; }
+    public bool has_moved { get; set; }
+
+    public int orientation { get; set; }
+
+
+    public static Pawn Load(Player owner, Vector2I position)
     {
+
         Pawn piece = (Pawn)(GD.Load<PackedScene>("res://Pieces/Pawn.tscn")).Instantiate();
         piece.owner_player = owner;
         piece.selected = false;
         piece.attacked = false;
+        piece.board_position = position;
+
+        piece.orientation = -1;
+
         return piece;
     }
 
@@ -23,20 +37,9 @@ public partial class Pawn : Node2D, IPiece
     {
         base._Ready();
         Link_Child_Nodes();
-        switch (owner_player.id)
-        {
-            case Team_Enum.White:
-                Piece_sprite.Texture = GD.Load<Texture2D>("res://assets/Pawn_White.png");
-                break;
-            case Team_Enum.Black:
-                Piece_sprite.Texture = GD.Load<Texture2D>("res://assets/Pawn_Black.png");
-                break;
-            default:
-                throw new IndexOutOfRangeException($"Piece with team ID higher than {(int)Team_Enum.Black} created");
-
-        }
+        piece_sprite.Texture = GD.Load<Texture2D>($"res://assets/{this.GetType()}_{owner_player.id.ToString()}.png");
     }
-        
+
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)
@@ -48,59 +51,42 @@ public partial class Pawn : Node2D, IPiece
     public void Link_Child_Nodes()
     {
         background_node = (Sprite2D)GetNode("Background");
-        Piece_sprite = (Sprite2D)GetNode("PieceSprite");
+        piece_sprite = (Sprite2D)GetNode("PieceSprite");
     }
 
-    public void Click(Player curr_player)
-    {   
-        if (curr_player == owner_player)
+    public List<Vector2I> All_Destinations(IPiece[,] board)
+    {
+
+        List<Vector2I> destinations = new List<Vector2I>();
+
+        if (board.GetLength(1) > board_position.Y + orientation && board_position.Y + orientation >= 0) //can't check for specific direction because board flipping
         {
-            if (owner_player.selected_piece == this)
+            if (board[board_position.X, board_position.Y + orientation] is null)
             {
-                this.Deselect();
-            }
-            else
-            {
-                if (owner_player.selected_piece is not null)
+                destinations.Add(new Vector2I(board_position.X, board_position.Y + orientation));
+
+                if (!has_moved && board[board_position.X, board_position.Y + orientation * 2] is null) //Can't be out of range on a proper board setup
                 {
-                    owner_player.selected_piece.Deselect();
+                    destinations.Add(new Vector2I(board_position.X, board_position.Y + orientation * 2));
                 }
-                this.Select();
+            }
+            //TODO add EnPassant check. "last move() on Game?"
+            if (board_position.X > 0 && board[board_position.X - 1, board_position.Y + orientation] is not null && board[board_position.X - 1, board_position.Y + orientation].owner_player != this.owner_player)
+            {
+                destinations.Add(new Vector2I(board_position.X - 1, board_position.Y + orientation));
+            }
+            if (board_position.X + 1 < board.GetLength(1) && board[board_position.X + 1, board_position.Y + orientation] is not null && board[board_position.X + 1, board_position.Y + orientation].owner_player != this.owner_player)
+            {
+                destinations.Add(new Vector2I(board_position.X + 1, board_position.Y + orientation));
             }
         }
 
-
-        Set_Background();
+        return destinations;
     }
 
-    public void Set_Background()
+    public void Flip()
     {
-        if (selected)
-        {
-            background_node.Show();
-            background_node.Texture = GD.Load<Texture2D>("res://assets/Background_Blue.png");
-        }
-        else if (attacked)
-        {
-            background_node.Show();
-            background_node.Texture = GD.Load<Texture2D>("res://assets/Background_Red.png");
-        }
-        else
-        {
-            background_node.Hide();
-        }
+        this.orientation = IPiece_Directional.Flip(this.orientation);
     }
 
-    public void Select()
-    {
-        selected = true;
-        owner_player.selected_piece = this;
-        Set_Background();
-    }
-    public void Deselect()
-    {
-        selected = false;
-        owner_player.selected_piece = null;
-        Set_Background();
-    }
 }
