@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfmkudsej1uhs"]
+
+[ext_resource type="Script" path="res://Pieces/Queen.cs" id="1_027xr"]
+
+[node name="Queen" type="Node2D"]
+script = ExtResource("1_027xr")
+
+[node name="Background" type="Sprite2D" parent="."]
+
+[node name="PieceSprite" type="Sprite2D" parent="."]

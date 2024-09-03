@@ -7,7 +7,8 @@ using Godot;
 
 public partial class Player : Node2D
 {
-    public Dictionary<IPiece,int> captures { get; private set; }
+    public Dictionary<Type,int> captures { get; set; }
+
     public Team_Enum id { get; private set; }
     public IPiece selected_piece;
 
@@ -25,12 +26,31 @@ public partial class Player : Node2D
         clock.Start(); 
         clock.Paused = true;
 
+        captures = new Dictionary<Type, int>();
+
     }
 
     public override void _Process(double delta)
     {
         base._Process(delta);
         clock_label.Text =String.Format("{0:D2}:{1:D2}", (int)(clock.TimeLeft / 60), (int)clock.TimeLeft % 60);
+    }
+
+    public void Record_Capture(IPiece piece)
+    {
+        Type p_type = piece.GetType();
+        if (captures.ContainsKey(p_type)){
+            captures[p_type] += 1;
+        }
+        else
+        {
+            captures.Add(p_type, 1);
+        }
+    }
+
+    public void Toggle_Clock()
+    {
+        clock.Paused = !clock.Paused;
     }
 
 }

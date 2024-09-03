@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 
 public partial class King : Node2D, IPiece
 {
-    Game game;
     public Sprite2D background_node { get; set; }
     public Sprite2D piece_sprite { get; set; }
     public Player owner_player { get; private set; }
@@ -31,7 +30,6 @@ public partial class King : Node2D, IPiece
     public override void _Ready()
     {
         base._Ready();
-        game = (Game)GetParent();
         Link_Child_Nodes();
         piece_sprite.Texture = GD.Load<Texture2D>($"res://assets/{this.GetType()}_{owner_player.id.ToString()}.png");
     }
@@ -54,7 +52,7 @@ public partial class King : Node2D, IPiece
 
     
 
-    public List<Vector2I> All_Destinations(IPiece[,] board)
+    public (List<Vector2I>, List<Vector2I>) All_Destinations(IPiece[,] board)
     {   
 
         List<Vector2I> destinations = new List<Vector2I>();
@@ -66,62 +64,61 @@ public partial class King : Node2D, IPiece
 
         if (up_safe)
         {
-            if (board[board_position.X,board_position.Y-1] is null || board[board_position.X, board_position.Y - 1].owner_player != this.owner_player)
-            {
-                destinations.Add(new Vector2I(board_position.X, board_position.Y - 1));
-            }
+            Check_Tile(board_position.X, board_position.Y-1);
             if (left_safe)
             {
-                if (board[board_position.X-1, board_position.Y - 1] is null || board[board_position.X-1, board_position.Y - 1].owner_player != this.owner_player)
-                {
-                    destinations.Add(new Vector2I(board_position.X-1, board_position.Y - 1));
-                }
+                Check_Tile(board_position.X - 1, board_position.Y-1);
             }
             if (right_safe)
             {
-                if (board[board_position.X + 1, board_position.Y - 1] is null || board[board_position.X + 1, board_position.Y - 1].owner_player != this.owner_player)
-                {
-                    destinations.Add(new Vector2I(board_position.X + 1, board_position.Y - 1));
-                }
+                Check_Tile(board_position.X + 1, board_position.Y-1);
             }
         }
         if (down_safe)
         {
-            if (board[board_position.X, board_position.Y + 1] is null || board[board_position.X, board_position.Y + 1].owner_player != this.owner_player)
-            {
-                destinations.Add(new Vector2I(board_position.X, board_position.Y + 1));
-            }
+            Check_Tile(board_position.X, board_position.Y+1);
             if (left_safe)
             {
-                if (board[board_position.X - 1, board_position.Y + 1] is null || board[board_position.X - 1, board_position.Y + 1].owner_player != this.owner_player)
-                {
-                    destinations.Add(new Vector2I(board_position.X - 1, board_position.Y + 1));
-                }
+                Check_Tile(board_position.X - 1, board_position.Y+1);
             }
             if (right_safe)
             {
-                if (board[board_position.X + 1, board_position.Y + 1] is null || board[board_position.X + 1, board_position.Y + 1].owner_player != this.owner_player)
-                {
-                    destinations.Add(new Vector2I(board_position.X + 1, board_position.Y + 1));
-                }
+                Check_Tile(board_position.X + 1, board_position.Y+1);
             }
         }
         if (left_safe)
         {
-            if (board[board_position.X - 1, board_position.Y] is null || board[board_position.X - 1, board_position.Y].owner_player != this.owner_player)
-            {
-                destinations.Add(new Vector2I(board_position.X - 1, board_position.Y));
-            }
+            Check_Tile(board_position.X - 1, board_position.Y);
         }
         if (right_safe)
         {
-            if (board[board_position.X + 1, board_position.Y] is null || board[board_position.X + 1, board_position.Y].owner_player != this.owner_player)
+            Check_Tile(board_position.X + 1, board_position.Y);
+        }
+        void Check_Tile(int i, int j)
+        {
+            if (board[i, j] is null || board[i, j].owner_player != this.owner_player)
             {
-                destinations.Add(new Vector2I(board_position.X + 1, board_position.Y));
+                destinations.Add(new Vector2I(i, j));
             }
         }
+        List<Vector2I> castling_destinations = null;
+        if (!has_moved && !attacked)
+        {
+            castling_destinations = new List<Vector2I>();
+        }
+        return (destinations,castling_destinations);
+    }
 
-        //TODO Castling
-        return destinations;
+    public string Notation()
+    {
+        return "K";
+    }
+    public bool Check_Special_Move(IPiece[,] board, Vector2I target) //TODO
+    {
+        return false;
+    }
+    public (IPiece secondary_target, Vector2I sec_target_origin, Vector2I? sec_target_dest) Perform_Special_Move(IPiece[,] board, Vector2I target)
+    {
+        throw new NotImplementedException();
     }
 }

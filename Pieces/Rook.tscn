@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://b06i5jwpsh7xb"]
+
+[ext_resource type="Script" path="res://Pieces/Rook.cs" id="1_6d42n"]
+
+[node name="Rook" type="Node2D"]
+script = ExtResource("1_6d42n")
+
+[node name="Background" type="Sprite2D" parent="."]
+
+[node name="PieceSprite" type="Sprite2D" parent="."]
