@@ -197,10 +197,7 @@ public partial class Game : Node
             else
             {
                 (IPiece secondary_target, Vector2I sec_target_origin, Vector2I? sec_target_dest) = piece.Perform_Special_Move(board, target);
-                if (sec_target_dest is null)
-                {
-                    board[sec_target_origin.X, sec_target_origin.Y] = null;
-                }
+                board[sec_target_origin.X, sec_target_origin.Y] = null;
                 if (!Move_Safety(players[curr_player], piece.board_position, target))
                 {
                     board[sec_target_origin.X, sec_target_origin.Y] = secondary_target;//UNDO UNDO
@@ -213,6 +210,7 @@ public partial class Game : Node
                 else
                 {
                     board[((Vector2I)sec_target_dest).X, ((Vector2I)sec_target_dest).Y] = secondary_target;
+                    secondary_target.board_position = (Vector2I)sec_target_dest;
                 }
                 Normal_Move(piece, target);
 
@@ -259,6 +257,10 @@ public partial class Game : Node
         if (current_player.checkmate_target is null)
         {
             return true;
+        }
+        if (current_player != players[curr_player])
+        {
+            return true; //Response moves ignore checks
         }
 
         IPiece mover = board[origin.X,origin.Y];

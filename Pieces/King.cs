@@ -14,6 +14,7 @@ public partial class King : Node2D, IPiece
     public bool attacked{ get; set; }
     public bool has_moved { get; set; }
 
+    private Game game;
 
     public static King Load(Player owner, Vector2I position)
     {
@@ -32,6 +33,7 @@ public partial class King : Node2D, IPiece
         base._Ready();
         Link_Child_Nodes();
         piece_sprite.Texture = GD.Load<Texture2D>($"res://assets/{this.GetType()}_{owner_player.id.ToString()}.png");
+        game = (Game)GetParent();
     }
 
 
@@ -105,6 +107,15 @@ public partial class King : Node2D, IPiece
         if (!has_moved && !attacked)
         {
             castling_destinations = new List<Vector2I>();
+            if (board_position.X + 2 < board.GetLength(0) && board[board_position.X + 1, board_position.Y] is null && board[board_position.X + 2, board_position.Y] is null)
+            {
+                castling_destinations.Add(new Vector2I(board_position.X + 2, board_position.Y));
+            }
+            if (board_position.X - 2 >= 0 && board[board_position.X - 1,board_position.Y] is null && board[board_position.X - 2, board_position.Y] is null)
+            {
+                castling_destinations.Add(new Vector2I(board_position.X - 2, board_position.Y));
+            }
+            
         }
         return (destinations,castling_destinations);
     }
@@ -115,10 +126,41 @@ public partial class King : Node2D, IPiece
     }
     public bool Check_Special_Move(IPiece[,] board, Vector2I target) //TODO
     {
+        if (target.X < board_position.X)
+        {
+            if (board[0, board_position.Y] is Rook
+                && !board[0, board_position.Y].has_moved
+                && board[0, board_position.Y].owner_player == owner_player)
+            {
+                if (game.Move_Safety(owner_player, board_position, new Vector2I(board_position.X - 1, board_position.Y)))
+                {
+                    return true;
+                }
+            }
+        }
+        else
+        {
+            if (board[board.GetLength(0) - 1, board_position.Y] is Rook
+                && !board[board.GetLength(0) - 1, board_position.Y].has_moved
+                && board[board.GetLength(0) - 1, board_position.Y].owner_player == owner_player)
+            {
+                if (game.Move_Safety(owner_player, board_position, new Vector2I(board_position.X + 1, board_position.Y)))
+                {
+                    return true;
+                }
+            }
+        }
         return false;
     }
     public (IPiece secondary_target, Vector2I sec_target_origin, Vector2I? sec_target_dest) Perform_Special_Move(IPiece[,] board, Vector2I target)
     {
-        throw new NotImplementedException();
+        if (target.X < board_position.X)
+        {
+            return (board[0, board_position.Y], board[0, board_position.Y].board_position, new Vector2I(board_position.X - 1, board_position.Y));
+        }
+        else
+        {
+            return (board[board.GetLength(0)-1, board_position.Y], board[board.GetLength(0)-1, board_position.Y].board_position, new Vector2I(board_position.X + 1, board_position.Y));
+        }
     }
 }
