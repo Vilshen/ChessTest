@@ -146,4 +146,8 @@ public partial class Queen : Node2D, IPiece
     {
         throw new InvalidOperationException();
     }
+    public string State_Dump()
+    {
+        return "Q";
+    }
 }

@@ -78,8 +78,9 @@ using Godot;
 
     public bool Check_Special_Move(IPiece[,] board, Vector2I target);
 
-    //for capture, target destination is null
+    //for capture target destination is null
     public (IPiece secondary_target, Vector2I sec_target_origin, Vector2I? sec_target_dest) Perform_Special_Move(IPiece[,] board, Vector2I target);
 
+    public string State_Dump();
 }
 

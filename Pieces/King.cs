@@ -163,4 +163,10 @@ public partial class King : Node2D, IPiece
             return (board[board.GetLength(0)-1, board_position.Y], board[board.GetLength(0)-1, board_position.Y].board_position, new Vector2I(board_position.X + 1, board_position.Y));
         }
     }
+
+    public string State_Dump()
+    {
+        return "K"+has_moved;
+    }
+
 }

@@ -114,4 +114,8 @@ public partial class Bishop : Node2D, IPiece
     {
         throw new InvalidOperationException();
     }
+    public string State_Dump()
+    {
+        return "B";
+    }
 }

@@ -118,4 +118,9 @@ public partial class Knight : Node2D, IPiece
     {
         throw new InvalidOperationException();
     }
+
+    public string State_Dump()
+    {
+        return "N";
+    }
 }

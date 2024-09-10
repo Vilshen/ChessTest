@@ -140,4 +140,14 @@ public partial class Pawn : Node2D, IPiece_Directional
         return (secondary_target, secondary_target.board_position, null);
     }
 
+    public string State_Dump()
+    {
+        return "P";
+    }
+
+    public void Promote()
+    {
+
+    }
+
 }

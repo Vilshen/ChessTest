@@ -29,6 +29,13 @@ public partial class Game : Node
 
     List<string> moves;
 
+    List<string> board_states;
+    int capture_timer = 0;
+
+    PromotionHandler prom_handler;
+
+    bool board_locked = false;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -57,6 +64,9 @@ public partial class Game : Node
         after_move_bg_end = (Sprite2D)GetNode("After_Move_Background_End");
 
         moves = new List<string>();
+        board_states = new List<string>();
+
+        prom_handler = (PromotionHandler)GetNode("Promotion_Handler");
 
         Setup_Board();
         players[0].Toggle_Clock();
@@ -86,6 +96,10 @@ public partial class Game : Node
 
     void Board_Click(Vector2 click_position)
     {
+        if (board_locked)
+        {
+            return;
+        }
         Vector2I cell = (Vector2I)Pixel_to_Grid(click_position);
 
         if (board[cell.X, cell.Y] is not null)
@@ -154,6 +168,8 @@ public partial class Game : Node
             }
         }
 
+        prom_handler.Load(new Type[] { typeof(Rook), typeof(Knight), typeof(Bishop), typeof(Queen) });
+
         void Set_Piece<T>(Player player, int i, int j)
         {
             object[] args = { player, new Vector2I(i, j) };
@@ -174,6 +190,7 @@ public partial class Game : Node
         return (board_end - board_start) * cell/8+board_start+cell_offset;
     }
 
+    //Validates a move and performs special moves if any (castling/en_passant)
     public void Move(IPiece piece, Vector2I target)
     {
         (List<Vector2I> normal_moves, List<Vector2I> special_moves) = piece.All_Destinations(board);
@@ -221,6 +238,7 @@ public partial class Game : Node
 
     }
 
+    //Actually performs a move
     void Normal_Move(IPiece piece, Vector2I target)
     {
         Node2D subject = piece as Node2D;
@@ -247,7 +265,15 @@ public partial class Game : Node
         after_move_bg_start.Position = Grid_to_Pixel(original_cell);
         after_move_bg_end.Position = Grid_to_Pixel(target);
 
-        Next_Turn();
+        if (piece is IPiece_Directional && target.Y == 0)
+        {
+            board_locked = true;
+            prom_handler.Deploy(piece, after_move_bg_end.Position);
+        }
+        else
+        {
+            Next_Turn();
+        }
     }
 
     //Simulates a move and checks if the King would be attacked
@@ -314,6 +340,7 @@ public partial class Game : Node
     {
         (piece as Node).QueueFree();
         players[curr_player].Record_Capture(piece);
+        capture_timer = 0;
     }
     void Rotate_Board()
     {
@@ -396,6 +423,15 @@ public partial class Game : Node
                 Declare_Draw();
             }
         }
+        if (capture_timer >= 50)
+        {
+            Declare_Draw();
+        }
+        string state = Record_Board_State();
+        if (board_states.Count(x => x==state) >= 3)
+        {
+            Declare_Draw();
+        }
         players[0].Toggle_Clock();
         players[1].Toggle_Clock();
         Rotate_Board();
@@ -421,7 +457,25 @@ public partial class Game : Node
         return moves;
     }
 
+    public void Promote(IPiece promotee, Type piece_type)
+    {
+        board[promotee.board_position.X, promotee.board_position.Y] = null;
 
+        object[] args = { promotee.owner_player, promotee.board_position };
+        board[promotee.board_position.X, promotee.board_position.Y] = (IPiece)(piece_type).GetMethod("Load").Invoke(null, args);
+        AddChild((Node)board[promotee.board_position.X, promotee.board_position.Y]);
+        (board[promotee.board_position.X, promotee.board_position.Y] as Node2D).Position = Grid_to_Pixel(promotee.board_position);
+
+        (promotee as Node).QueueFree();
+
+        moves[moves.Count-1] += board[promotee.board_position.X, promotee.board_position.Y].Notation();
+
+        board_locked = false;
+
+        prom_handler.Position = new Vector2I(-1000, -1000);
+
+        Next_Turn();
+    }
     void Checkmate(Player player)
     {
         GD.Print($"TODO, player {player.id} got mated");
@@ -471,5 +525,26 @@ public partial class Game : Node
             .Union(tupl.Item2.Where(sp_move => board[i,j].Check_Special_Move(board,sp_move)));
 
         return all_destinations.ToList();
+    }
+
+    string Record_Board_State()
+    {
+        string state = "";
+        for (int i = 0; i < board.GetLength(0); i++)
+        {
+            for (int j =0;j< board.GetLength(1); j++)
+            {
+                if (board[i,j] is null)
+                {
+                    state += " ";
+                }
+                else
+                {
+                    state += board[i, j].State_Dump();
+                }
+            }
+        }
+        board_states.Add(state);
+        return state;
     }
 }

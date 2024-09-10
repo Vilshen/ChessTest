@@ -19,5 +19,7 @@ namespace Chess.Pieces
 
         }
 
+        public void Promote();
+
     }
 }
