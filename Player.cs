@@ -7,28 +7,29 @@ using Godot;
 
 public partial class Player : Node2D
 {
-    public Dictionary<Type,int> captures { get; set; }
-
     public Team_Enum id { get; private set; }
     public IPiece selected_piece;
 
     Timer clock;
     Label clock_label;
+    Node2D capture_list_node;
 
     public IPiece checkmate_target;
-    public void Setup(Team_Enum player_id,int clock_length)
+    public void Setup(Team_Enum player_id, int clock_length)
     {
         id = player_id;
         clock = (Timer)GetNode("Clock");
         clock.WaitTime = clock_length;
 
         clock_label = (Label)GetNode("Clock_Label");
-        clock.Start(); 
+
+        capture_list_node = (Node2D)GetNode("Capture_List");
+
+        clock.Start();
         clock.Paused = true;
         Game game = (Game)GetParent();
         clock.Timeout += () => game.Checkmate(this, "timeout");
 
-        captures = new Dictionary<Type, int>();
 
     }
 
@@ -36,19 +37,16 @@ public partial class Player : Node2D
     public override void _Process(double delta)
     {
         base._Process(delta);
-        clock_label.Text =String.Format("{0:D2}:{1:D2}", (int)(clock.TimeLeft / 60), (int)clock.TimeLeft % 60);
+        clock_label.Text = String.Format("{0:D2}:{1:D2}", (int)(clock.TimeLeft / 60), (int)clock.TimeLeft % 60);
     }
 
-    public void Record_Capture(IPiece piece)
+    public void Record_Capture(IPiece new_capture)
     {
-        Type p_type = piece.GetType();
-        if (captures.ContainsKey(p_type)){
-            captures[p_type] += 1;
-        }
-        else
-        {
-            captures.Add(p_type, 1);
-        }
+        Sprite2D new_sprite = new Sprite2D();
+        new_sprite.Texture = GD.Load<Texture2D>($"res://assets/{new_capture.GetType()}_{(1 - this.id).ToString()}.png");
+        new_sprite.ApplyScale(new Vector2((float)0.25, (float)0.25));
+        new_sprite.Position += new Vector2(capture_list_node.GetChildren().Count * 32,0);
+        capture_list_node.AddChild(new_sprite);
     }
 
     public void Toggle_Clock()
