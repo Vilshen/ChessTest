@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://cnrg4t5apd3aq"]
+[gd_scene load_steps=9 format=3 uid="uid://cnrg4t5apd3aq"]
 
 [ext_resource type="PackedScene" uid="uid://bgcf2ix8n4bir" path="res://board.tscn" id="1_ta8o5"]
 [ext_resource type="Script" path="res://Game.cs" id="1_wvm1j"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cl1nm3es7ugol" path="res://player.tscn" id="3_xm2nj"]
 [ext_resource type="Texture2D" uid="uid://bxcxlgj6wretg" path="res://assets/Board_Coordinates_Black.png" id="4_7ff12"]
 [ext_resource type="Texture2D" uid="uid://cgl6ytswuwoo6" path="res://assets/Background_Yellow.png" id="4_c0ycg"]
+[ext_resource type="PackedScene" uid="uid://bw07kevbigy6q" path="res://game_over_window.tscn" id="5_qmmyo"]
 [ext_resource type="Script" path="res://PromotionHandler.cs" id="7_qpvdt"]
 
 [node name="Game" type="Node"]
@@ -21,6 +22,10 @@ texture = ExtResource("3_w6nsw")
 visible = false
 texture = ExtResource("4_7ff12")
 
+[node name="Promotion_Handler" type="Node2D" parent="."]
+position = Vector2(1981, 71)
+script = ExtResource("7_qpvdt")
+
 [node name="Player_White" parent="." instance=ExtResource("3_xm2nj")]
 position = Vector2(1100, 984)
 
@@ -35,6 +40,8 @@ texture = ExtResource("4_c0ycg")
 position = Vector2(-157, -128)
 texture = ExtResource("4_c0ycg")
 
-[node name="Promotion_Handler" type="Node2D" parent="."]
-position = Vector2(1229, 507)
-script = ExtResource("7_qpvdt")
+[node name="Game_Over_Window" parent="." instance=ExtResource("5_qmmyo")]
+visible = false
+z_index = 1000
+position = Vector2(960, 540)
+scale = Vector2(3, 3)

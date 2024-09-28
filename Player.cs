@@ -25,10 +25,13 @@ public partial class Player : Node2D
         clock_label = (Label)GetNode("Clock_Label");
         clock.Start(); 
         clock.Paused = true;
+        Game game = (Game)GetParent();
+        clock.Timeout += () => game.Checkmate(this, "timeout");
 
         captures = new Dictionary<Type, int>();
 
     }
+
 
     public override void _Process(double delta)
     {
@@ -51,6 +54,11 @@ public partial class Player : Node2D
     public void Toggle_Clock()
     {
         clock.Paused = !clock.Paused;
+    }
+
+    public void Add_Time(int bonus_time)
+    {
+        clock.Start(clock.TimeLeft + bonus_time);
     }
 
 }

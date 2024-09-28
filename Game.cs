@@ -33,6 +33,7 @@ public partial class Game : Node
     int capture_timer = 0;
 
     PromotionHandler prom_handler;
+    GameOverWindow game_over_window;
 
     bool board_locked = false;
 
@@ -43,6 +44,7 @@ public partial class Game : Node
 
         //
         clock_length = 600;
+        per_move_clock_bonus = 5;
         //
 
         board_texture = (Sprite2D)GetNode("Board");
@@ -67,6 +69,8 @@ public partial class Game : Node
         board_states = new List<string>();
 
         prom_handler = (PromotionHandler)GetNode("Promotion_Handler");
+
+        game_over_window = (GameOverWindow)GetNode("Game_Over_Window");
 
         Setup_Board();
         players[0].Toggle_Clock();
@@ -265,6 +269,11 @@ public partial class Game : Node
         after_move_bg_start.Position = Grid_to_Pixel(original_cell);
         after_move_bg_end.Position = Grid_to_Pixel(target);
 
+        if (piece is IPiece_Directional)
+        {
+            capture_timer = 0; //pawns reset it
+        }
+
         if (piece is IPiece_Directional && target.Y == 0)
         {
             board_locked = true;
@@ -404,6 +413,7 @@ public partial class Game : Node
 
     void Next_Turn()
     {
+        players[curr_player].Add_Time(per_move_clock_bonus);
         players[curr_player].checkmate_target.attacked = false;
 
         players[1 - curr_player].checkmate_target.attacked = All_Safe_Moves(players[curr_player])
@@ -416,21 +426,21 @@ public partial class Game : Node
         {
             if (players[curr_player].checkmate_target.attacked)
             {
-                Checkmate(players[curr_player]);
+                Checkmate(players[curr_player], "checkmate");
             }
             else
             {
-                Declare_Draw();
+                Declare_Draw("slatemate");
             }
         }
-        if (capture_timer >= 50)
+        if (capture_timer >= 50*2)
         {
-            Declare_Draw();
+            Declare_Draw("50 moves rule");
         }
         string state = Record_Board_State();
         if (board_states.Count(x => x==state) >= 3)
         {
-            Declare_Draw();
+            Declare_Draw("threefold repetition rule");
         }
         players[0].Toggle_Clock();
         players[1].Toggle_Clock();
@@ -476,14 +486,16 @@ public partial class Game : Node
 
         Next_Turn();
     }
-    void Checkmate(Player player)
+    public void Checkmate(Player loser, string cause)
     {
-        GD.Print($"TODO, player {player.id} got mated");
+        players[curr_player].Toggle_Clock();
+        game_over_window.Activate(true, players[1 - (int)loser.id], cause);
     }
 
-    void Declare_Draw()
+    void Declare_Draw(string cause)
     {
-        GD.Print($"TODO, game ended in a draw");
+        players[curr_player].Toggle_Clock();
+        game_over_window.Activate(false, players[0], cause);
     }
 
     void Record_Move(IPiece piece, Vector2I destination)

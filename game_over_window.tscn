@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://bw07kevbigy6q"]
+
+[ext_resource type="Texture2D" uid="uid://b25tg2q6yavwe" path="res://assets/wood_bg.jpg" id="1_bbx3c"]
+[ext_resource type="Script" path="res://GameOverWindow.cs" id="2_iekjd"]
+
+[node name="Game_Over_Window" type="Sprite2D"]
+texture = ExtResource("1_bbx3c")
+script = ExtResource("2_iekjd")
+
+[node name="Game_Over_Label" type="Label" parent="."]
+offset_left = -66.0
+offset_top = -80.0
+offset_right = 66.0
+offset_bottom = -45.0
+scale = Vector2(0.05, 0.05)
+theme_override_constants/outline_size = 70
+theme_override_font_sizes/font_size = 500
+text = "Game over"
+
+[node name="Game_Over_Description_Label" type="Label" parent="."]
+offset_left = -106.0
+offset_top = -30.0
+offset_right = 4534.0
+offset_bottom = 1470.0
+scale = Vector2(0.05, 0.05)
+size_flags_horizontal = 3
+size_flags_vertical = 6
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 20
+theme_override_font_sizes/font_size = 250
+text = "placeholder"
+autowrap_mode = 3
+
+[node name="Return_To_Menu_Button" type="Button" parent="."]
+offset_left = -78.0
+offset_top = 61.0
+offset_right = 1482.0
+offset_bottom = 274.0
+scale = Vector2(0.1, 0.1)
+theme_override_font_sizes/font_size = 150
+text = "Return to main menu"
