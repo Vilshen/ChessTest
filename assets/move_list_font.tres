@@ -1,0 +1,6 @@
+[gd_resource type="FontVariation" load_steps=2 format=3 uid="uid://17akbtg3d6g0"]
+
+[ext_resource type="FontFile" uid="uid://def0e8t3tqu1a" path="res://assets/Courier Prime.ttf" id="1_4bm85"]
+
+[resource]
+base_font = ExtResource("1_4bm85")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://cnrg4t5apd3aq"]
+[gd_scene load_steps=10 format=3 uid="uid://cnrg4t5apd3aq"]
 
 [ext_resource type="PackedScene" uid="uid://bgcf2ix8n4bir" path="res://board.tscn" id="1_ta8o5"]
 [ext_resource type="Script" path="res://Game.cs" id="1_wvm1j"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cl1nm3es7ugol" path="res://player.tscn" id="3_xm2nj"]
 [ext_resource type="Texture2D" uid="uid://bxcxlgj6wretg" path="res://assets/Board_Coordinates_Black.png" id="4_7ff12"]
 [ext_resource type="Texture2D" uid="uid://cgl6ytswuwoo6" path="res://assets/Background_Yellow.png" id="4_c0ycg"]
+[ext_resource type="PackedScene" uid="uid://b3wi6dgfeahn4" path="res://scroll_textbox.tscn" id="5_0gi2c"]
 [ext_resource type="PackedScene" uid="uid://bw07kevbigy6q" path="res://game_over_window.tscn" id="5_qmmyo"]
 [ext_resource type="Script" path="res://PromotionHandler.cs" id="7_qpvdt"]
 
@@ -21,6 +22,12 @@ texture = ExtResource("3_w6nsw")
 [node name="Coordinates_Black" type="Sprite2D" parent="Board"]
 visible = false
 texture = ExtResource("4_7ff12")
+
+[node name="Scroll_Textbox" parent="." instance=ExtResource("5_0gi2c")]
+offset_left = 1220.0
+offset_top = 150.0
+offset_right = 1820.0
+offset_bottom = 750.0
 
 [node name="Promotion_Handler" type="Node2D" parent="."]
 position = Vector2(1981, 71)

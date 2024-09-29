@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3wi6dgfeahn4"]
+
+[ext_resource type="Script" path="res://ScrollTextbox.cs" id="1_h4xmk"]
+
+[node name="Scroll_Textbox" type="ScrollContainer"]
+offset_left = 1.0
+offset_right = 601.0
+offset_bottom = 900.0
+horizontal_scroll_mode = 0
+script = ExtResource("1_h4xmk")
+
+[node name="Scroll_VBox" type="VBoxContainer" parent="."]
+layout_mode = 2

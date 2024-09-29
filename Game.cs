@@ -37,6 +37,8 @@ public partial class Game : Node
 
     bool board_locked = false;
 
+    VBoxContainer scroll_vbox;
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
@@ -71,6 +73,8 @@ public partial class Game : Node
         prom_handler = (PromotionHandler)GetNode("Promotion_Handler");
 
         game_over_window = (GameOverWindow)GetNode("Game_Over_Window");
+
+        scroll_vbox = (VBoxContainer)GetNode("Scroll_Textbox/Scroll_VBox");
 
         Setup_Board();
         players[0].Toggle_Clock();
@@ -514,7 +518,22 @@ public partial class Game : Node
             char target_file = (char)('a' + (board.GetLength(0) - destination.X-1));
             output = $"{piece.Notation()}{origin_file}{piece.board_position.Y+1}{(capture ? "x" : "")}{target_file}{destination.Y+1}";
         }
+        
+        if (moves.Count % 2 == 0)
+        {
+            Label new_move_label = new Label();
+            new_move_label.Text = $"{moves.Count/2+1}    {output}";
+            FontVariation fv = (FontVariation)ResourceLoader.Load("res://assets/move_list_font.tres");
+            new_move_label.AddThemeFontOverride("font", fv);
+            scroll_vbox.AddChild(new_move_label);
+        }
+        else
+        {
+            Label last_label = (Label)scroll_vbox.GetChild(-1);
+            last_label.Text = $"{last_label.Text}{new string(' ', 35 - last_label.Text.Length)}{output}";
+        }
         moves.Add(output);
+
     }
 
     public string Last_Move() //I hate En Passant
