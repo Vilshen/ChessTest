@@ -73,7 +73,7 @@ public partial class Game : Node
         prom_handler = (PromotionHandler)GetNode("Promotion_Handler");
 
         game_over_window = (GameOverWindow)GetNode("Game_Over_Window");
-
+        
         scroll_vbox = (VBoxContainer)GetNode("Scroll_Textbox/Scroll_VBox");
 
         Setup_Board();
@@ -525,12 +525,13 @@ public partial class Game : Node
             new_move_label.Text = $"{moves.Count/2+1}    {output}";
             FontVariation fv = (FontVariation)ResourceLoader.Load("res://assets/move_list_font.tres");
             new_move_label.AddThemeFontOverride("font", fv);
-            scroll_vbox.AddChild(new_move_label);
+            new_move_label.AddThemeFontSizeOverride("font_size", 20);
+            scroll_vbox.AddChild(new_move_label);            
         }
         else
         {
             Label last_label = (Label)scroll_vbox.GetChild(-1);
-            last_label.Text = $"{last_label.Text}{new string(' ', 35 - last_label.Text.Length)}{output}";
+            last_label.Text = $"{last_label.Text}{new string(' ', 40 - last_label.Text.Length)}{output}";
         }
         moves.Add(output);
 

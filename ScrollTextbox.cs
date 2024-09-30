@@ -8,11 +8,11 @@ public partial class ScrollTextbox : ScrollContainer
 	public override void _Ready()
 	{
 		scroll_bar = this.GetVScrollBar();
-		this.ChildOrderChanged += () => this.ScrollVertical = (int)scroll_bar.MaxValue;
+		VBoxContainer container = (VBoxContainer)GetChild(0);
+		container.ChildOrderChanged += async () => { 
+			await ToSignal(GetTree(), SceneTree.SignalName.ProcessFrame); //without this it takes 1-2 extra turns before it actually scrolls
+			this.ScrollVertical = (int)scroll_bar.MaxValue; 
+		};
 	}
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
 }

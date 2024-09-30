@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://cnrg4t5apd3aq"]
+[gd_scene load_steps=11 format=3 uid="uid://cnrg4t5apd3aq"]
 
 [ext_resource type="PackedScene" uid="uid://bgcf2ix8n4bir" path="res://board.tscn" id="1_ta8o5"]
 [ext_resource type="Script" path="res://Game.cs" id="1_wvm1j"]
@@ -9,6 +9,14 @@
 [ext_resource type="PackedScene" uid="uid://b3wi6dgfeahn4" path="res://scroll_textbox.tscn" id="5_0gi2c"]
 [ext_resource type="PackedScene" uid="uid://bw07kevbigy6q" path="res://game_over_window.tscn" id="5_qmmyo"]
 [ext_resource type="Script" path="res://PromotionHandler.cs" id="7_qpvdt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qkk0y"]
+bg_color = Color(0.27451, 0.27451, 0.27451, 0.941176)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0, 0, 0, 1)
 
 [node name="Game" type="Node"]
 script = ExtResource("1_wvm1j")
@@ -28,6 +36,7 @@ offset_left = 1220.0
 offset_top = 150.0
 offset_right = 1820.0
 offset_bottom = 750.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_qkk0y")
 
 [node name="Promotion_Handler" type="Node2D" parent="."]
 position = Vector2(1981, 71)
