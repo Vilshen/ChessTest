@@ -21,8 +21,8 @@ public partial class Game : Node
     Player[] players;
     int curr_player;
 
-    int clock_length;
-    int per_move_clock_bonus;
+    public int clock_length;
+    public int per_move_clock_bonus;
 
     Sprite2D after_move_bg_start;
     Sprite2D after_move_bg_end;
@@ -43,11 +43,6 @@ public partial class Game : Node
     public override void _Ready()
     {
         base._Ready();
-
-        //
-        clock_length = 600;
-        per_move_clock_bonus = 5;
-        //
 
         board_texture = (Sprite2D)GetNode("Board");
         board_coords_white = (Sprite2D)GetNode("Board/Coordinates_White");
@@ -492,12 +487,14 @@ public partial class Game : Node
     }
     public void Checkmate(Player loser, string cause)
     {
+        board_locked = true;
         players[curr_player].Toggle_Clock();
         game_over_window.Activate(true, players[1 - (int)loser.id], cause);
     }
 
     void Declare_Draw(string cause)
     {
+        board_locked = true;
         players[curr_player].Toggle_Clock();
         game_over_window.Activate(false, players[0], cause);
     }
@@ -546,6 +543,10 @@ public partial class Game : Node
         return moves.Last();
     }
 
+    public void Resign()
+    {
+        Checkmate(players[curr_player], "resignation");
+    }
     List<Vector2I> Combine_Destinations(int i,int j)
     {
         (List<Vector2I>, List<Vector2I>) tupl = board[i, j].All_Destinations(board);

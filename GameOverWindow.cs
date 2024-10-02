@@ -13,11 +13,6 @@ public partial class GameOverWindow : Sprite2D
 
     }
 
-	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public override void _Process(double delta)
-	{
-	}
-
 	public void Activate(bool checkmate, Player player, string details)
 	{
 		if (this.Visible)
@@ -40,7 +35,7 @@ public partial class GameOverWindow : Sprite2D
 
 	void End_Game()
 	{
-		
+		((MainMenu)GetParent().GetParent()).End_Game();
 	}
 
 }

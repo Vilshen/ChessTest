@@ -14,19 +14,35 @@ public partial class Player : Node2D
     Label clock_label;
     Node2D capture_list_node;
 
+    bool ignore_clock;
+
     public IPiece checkmate_target;
     public void Setup(Team_Enum player_id, int clock_length)
     {
         id = player_id;
         clock = (Timer)GetNode("Clock");
+        clock_label = (Label)GetNode("Clock_Label");
+        if (clock_length == 0)
+        {
+            ignore_clock = true;
+            clock_label.Visible = false;
+        }
+        else
+        {
+            ignore_clock = false;
+        }
         clock.WaitTime = clock_length;
 
-        clock_label = (Label)GetNode("Clock_Label");
+        
 
         capture_list_node = (Node2D)GetNode("Capture_List");
 
-        clock.Start();
-        clock.Paused = true;
+        if (!ignore_clock)
+        {
+            clock.Start();
+            clock.Paused = true;
+        }
+        
         Game game = (Game)GetParent();
         clock.Timeout += () => game.Checkmate(this, "timeout");
 
@@ -51,12 +67,19 @@ public partial class Player : Node2D
 
     public void Toggle_Clock()
     {
-        clock.Paused = !clock.Paused;
+        if (!ignore_clock)
+        {
+            clock.Paused = !clock.Paused;
+        }
+        
     }
 
     public void Add_Time(int bonus_time)
     {
-        clock.Start(clock.TimeLeft + bonus_time);
+        if (!ignore_clock)
+        {
+            clock.Start(clock.TimeLeft + bonus_time);
+        }   
     }
 
 }

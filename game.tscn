@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://cnrg4t5apd3aq"]
+[gd_scene load_steps=12 format=3 uid="uid://cnrg4t5apd3aq"]
 
 [ext_resource type="PackedScene" uid="uid://bgcf2ix8n4bir" path="res://board.tscn" id="1_ta8o5"]
 [ext_resource type="Script" path="res://Game.cs" id="1_wvm1j"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://b3wi6dgfeahn4" path="res://scroll_textbox.tscn" id="5_0gi2c"]
 [ext_resource type="PackedScene" uid="uid://bw07kevbigy6q" path="res://game_over_window.tscn" id="5_qmmyo"]
 [ext_resource type="Script" path="res://PromotionHandler.cs" id="7_qpvdt"]
+[ext_resource type="Script" path="res://ResignationButton.cs" id="10_n3dem"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qkk0y"]
 bg_color = Color(0.27451, 0.27451, 0.27451, 0.941176)
@@ -61,3 +62,12 @@ visible = false
 z_index = 1000
 position = Vector2(960, 540)
 scale = Vector2(3, 3)
+
+[node name="Resignation_Button" type="Button" parent="."]
+offset_left = 1320.0
+offset_top = 800.0
+offset_right = 1720.0
+offset_bottom = 950.0
+theme_override_font_sizes/font_size = 54
+text = "Resign"
+script = ExtResource("10_n3dem")

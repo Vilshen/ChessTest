@@ -1,0 +1,70 @@
+[gd_scene load_steps=2 format=3 uid="uid://b3i0gjc6wa1ce"]
+
+[ext_resource type="Script" path="res://MainMenu.cs" id="1_xnqfo"]
+
+[node name="Main_Menu" type="Node"]
+script = ExtResource("1_xnqfo")
+
+[node name="Launch_Button" type="Button" parent="."]
+offset_left = 810.0
+offset_top = 300.0
+offset_right = 1110.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 50
+text = "Start game"
+
+[node name="Timer_Selector" type="OptionButton" parent="."]
+offset_left = 600.0
+offset_top = 440.0
+offset_right = 820.0
+offset_bottom = 510.0
+theme_override_font_sizes/font_size = 40
+selected = 0
+item_count = 9
+popup/item_0/text = "No timer"
+popup/item_1/text = "1"
+popup/item_1/id = 1
+popup/item_2/text = "3"
+popup/item_2/id = 2
+popup/item_3/text = "5"
+popup/item_3/id = 3
+popup/item_4/text = "10"
+popup/item_4/id = 4
+popup/item_5/text = "15"
+popup/item_5/id = 5
+popup/item_6/text = "20"
+popup/item_6/id = 6
+popup/item_7/text = "30"
+popup/item_7/id = 7
+popup/item_8/text = "60"
+popup/item_8/id = 8
+
+[node name="Bonus_Selector" type="OptionButton" parent="."]
+offset_left = 1100.0
+offset_top = 440.0
+offset_right = 1320.0
+offset_bottom = 510.0
+theme_override_font_sizes/font_size = 40
+selected = 0
+item_count = 7
+popup/item_0/text = "No bonus"
+popup/item_1/text = "1"
+popup/item_1/id = 1
+popup/item_2/text = "2"
+popup/item_2/id = 2
+popup/item_3/text = "3"
+popup/item_3/id = 3
+popup/item_4/text = "4"
+popup/item_4/id = 4
+popup/item_5/text = "5"
+popup/item_5/id = 5
+popup/item_6/text = "10"
+popup/item_6/id = 6
+
+[node name="Exit_Button" type="Button" parent="."]
+offset_left = 810.0
+offset_top = 600.0
+offset_right = 1110.0
+offset_bottom = 680.0
+theme_override_font_sizes/font_size = 50
+text = "Exit"
