@@ -67,11 +67,13 @@ public partial class MainMenu : Node
         launch_button.Visible = false;
         timer_selector.Visible = false;
         bonus_selector.Visible = false;
+        exit_button.Visible = false;
     }
     void Set_All_Visible()
     {
         launch_button.Visible = true;
         timer_selector.Visible = true;
         bonus_selector.Visible = true;
+        exit_button.Visible = true;
     }
 }
